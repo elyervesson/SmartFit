@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import dj_database_url # ADD
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_DIR = os.path.join(BASE_DIR, 'SmartFit') # ADD
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -25,7 +27,7 @@ SECRET_KEY = '*fm0r8&!!=+458dmt+^6a)1in008=))^b@(-x@=q+!2==95n6d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [] # Comentado
 
 
 # Application definition
@@ -38,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SmartFit',
-    # Third-party applications
     'rest_framework',
 ]
 
@@ -108,15 +109,20 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+# Update database configuration with $DATABASE_URL. # ADD
+db_from_env = dj_database_url.config(conn_max_age=500) # ADD
+DATABASES['default'].update(db_from_env) # ADD
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure() # ADD
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # ADD
+
+# Allow all host headers # ADD
+ALLOWED_HOSTS = ['*'] # ADD
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -129,7 +135,10 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static'),
 ]
 
+# Simplified static file serving. # ADD
+# https://warehouse.python.org/project/whitenoise/ # ADD
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage' # ADD
+
 # Upload Image
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 MEDIA_URL = '/media/'
