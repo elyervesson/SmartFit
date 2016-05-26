@@ -1,4 +1,7 @@
 django
 djangorestframework
-gunicorn 
+Pillow
+dj-database-url==0.4.0
+gunicorn==19.4.5
+whitenoise==2.0.6
 psycopg2
